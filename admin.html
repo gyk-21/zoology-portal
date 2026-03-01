@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Zoology Academic System</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #dc2626;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --correct: #10b981;
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --secondary: #3b82f6;
+            --accent: #ef4444;
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: 0.3s;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        header .subtitle {
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .auth-container input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn.danger {
+            background: var(--accent);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            width: auto;
+            margin-top: 2rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .history-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .history-section h2 {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            background-color: var(--card-bg);
+        }
+
+        .actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Admin Control Panel</h1>
+        <div class="subtitle">Designed & Developed by Yaswanth Kumar</div>
+    </header>
+
+    <div class="container auth-container" id="authSection">
+        <h2>Admin Login</h2>
+        <input type="password" id="adminPassword" placeholder="Enter password..." onkeypress="handleEnter(event)">
+        <button class="btn" onclick="checkPassword()">Login</button>
+        <div id="authError" style="color: var(--accent); margin-top: 1rem; display: none;">Incorrect password!</div>
+        <a href="./index.html" class="btn btn-outline"
+            style="width: 100%; margin-top: 1rem; border-color: var(--border); color: var(--text);">Back to
+            Dashboard</a>
+    </div>
+
+    <main class="container dashboard" id="dashboardSection">
+        <a href="./index.html" class="btn btn-outline" style="margin-top: 0; margin-bottom: 2rem;">&larr; Back to
+            Dashboard</a>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Quiz Attempts</h3>
+                <p id="totalQuizzes">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Student Score (%)</h3>
+                <p id="avgScore">0%</p>
+            </div>
+            <div class="stat-card">
+                <h3>Lab Completion</h3>
+                <p id="labStats">0/4</p>
+            </div>
+            <div class="stat-card">
+                <h3>Weakest Topic</h3>
+                <p id="weakestTopic" style="font-size: 1.3rem; padding-top: 0.5rem;">N/A</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h2>Result Auditor (Verification Tool)</h2>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1.5rem;">Paste details from the student's email to
+                verify authenticity.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <input type="text" id="auditName" placeholder="Student Name"
+                        style="width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-bottom: 1rem;">
+                    <input type="text" id="auditScore" placeholder="Score (e.g. 85.25)"
+                        style="width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-bottom: 1rem;">
+                    <input type="text" id="auditTimestamp" placeholder="Date & Time (copy from email)"
+                        style="width: 100%; padding: 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); margin-bottom: 1rem;">
+                </div>
+                <div>
+                    <textarea id="auditSeal" placeholder="Paste SECURITY SEAL here..."
+                        style="width: 100%; height: 110px; padding: 0.8rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: monospace;"></textarea>
+                    <button class="btn" style="background: var(--primary); margin-top: 1rem;"
+                        onclick="runAudit()">Verify Integrity</button>
+                    <div id="auditResult"
+                        style="margin-top: 1rem; padding: 0.8rem; border-radius: 6px; display: none; font-weight: bold; text-align: center;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h2>Competitive Exam History</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Date</th>
+                            <th>Score</th>
+                            <th>Accuracy</th>
+                            <th>Time Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn" style="width: auto; background: var(--secondary);" onclick="emailAllHistory()">📧 Email
+                All History</button>
+            <button class="btn" style="width: auto;" onclick="exportData()">⬇ Export JSON Data</button>
+            <button class="btn danger" style="width: auto;" onclick="resetData()">🗑 Reset All Data</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Yaswanth Kumar | Zoology Academic Portal | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // --- Navigation & Theme ---
+        const applyTheme = (theme) => { document.documentElement.setAttribute('data-theme', theme); };
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('zoology_theme', target);
+            applyTheme(target);
+            const icon = document.getElementById('theme-icon');
+            if (icon) icon.textContent = target === 'dark' ? '☀️' : '🌙';
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('zoology_theme') || 'light';
+            applyTheme(saved);
+            const btn = document.createElement('button');
+            btn.className = 'theme-toggle';
+            btn.onclick = toggleTheme;
+            btn.title = "Toggle Theme";
+            btn.innerHTML = `<span id="theme-icon">${saved === 'dark' ? '☀️' : '🌙'}</span>`;
+            document.body.appendChild(btn);
+        });
+
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js');
+            }
+        });
+
+        // --- Auth ---
+        function handleEnter(e) { if (e.key === 'Enter') checkPassword(); }
+        function checkPassword() {
+            const pwd = document.getElementById('adminPassword').value;
+            if (pwd === 'admin123') {
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('dashboardSection').style.display = 'block';
+                loadDashboardData();
+            } else {
+                document.getElementById('authError').style.display = 'block';
+            }
+        }
+
+        // --- Dashboard Data ---
+        function loadDashboardData() {
+            // Competitive History
+            const history = JSON.parse(localStorage.getItem('zoology_comp_history') || '[]');
+            const tbody = document.getElementById('historyTableBody');
+            tbody.innerHTML = '';
+
+            if (history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; opacity: 0.7;">No exam history found.</td></tr>';
+            } else {
+                history.slice().reverse().forEach(h => {
+                    tbody.innerHTML += `<tr>
+                        <td><strong>${h.name || 'Anonymous'}</strong></td>
+                        <td>${new Date(h.date).toLocaleString()}</td>
+                        <td><strong>${h.score}</strong> / 100</td>
+                        <td>${h.accuracy}%</td>
+                        <td>${h.timeTaken}</td>
+                    </tr>`;
+                });
+            }
+
+            // Quiz Stats
+            const quizStats = JSON.parse(localStorage.getItem('zoology_quiz_stats') || '{"attempts": 0, "totalScore": 0, "topics": {}}');
+            document.getElementById('totalQuizzes').textContent = quizStats.attempts;
+
+            let avg = 0;
+            if (quizStats.attempts > 0) avg = Math.round(quizStats.totalScore / quizStats.attempts);
+            document.getElementById('avgScore').textContent = `${avg}%`;
+
+            // Weakest Topic
+            let weakest = "N/A", minScore = 999;
+            for (const [topic, data] of Object.entries(quizStats.topics)) {
+                let topicAvg = data.score / data.attempts;
+                if (topicAvg < minScore) { minScore = topicAvg; weakest = topic; }
+            }
+            if (minScore !== 999) {
+                document.getElementById('weakestTopic').textContent = `${weakest} (~${Math.round(minScore)}%)`;
+            }
+
+            // Lab Stats
+            const labs = JSON.parse(localStorage.getItem('zoology_labs') || '{"mitosis": false, "heart": false, "dna": false, "gram": false}');
+            const completed = Object.values(labs).filter(Boolean).length;
+            document.getElementById('labStats').textContent = `${completed}/4`;
+        }
+
+        function exportData() {
+            const dataToExport = {
+                competitive: JSON.parse(localStorage.getItem('zoology_comp_history') || '[]'),
+                quizzes: JSON.parse(localStorage.getItem('zoology_quiz_stats') || '{}'),
+                labs: JSON.parse(localStorage.getItem('zoology_labs') || '{}')
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "zoology_performance_data.json");
+            dlAnchorElem.click();
+        }
+
+        function emailAllHistory() {
+            const history = JSON.parse(localStorage.getItem('zoology_comp_history') || '[]');
+            if (history.length === 0) { alert("No history records to email."); return; }
+            let tableData = "STUDENT NAME | DATE | SCORE | ACCURACY | TIME\n";
+            tableData += "--------------------------------------------------\n";
+            history.forEach(h => {
+                tableData += `${h.name || 'Anonymous'} | ${new Date(h.date).toLocaleString()} | ${h.score}/100 | ${h.accuracy}% | ${h.timeTaken}\n`;
+            });
+
+            const subject = encodeURIComponent("Zoology Portal: Full Exam History Report");
+            const body = encodeURIComponent(
+                `Zoology Academic System - Aggregated Exam Report\n` +
+                `-----------------------------------------------\n` +
+                `Total Records: ${history.length}\n\n` +
+                `Detailed Records:\n` +
+                `-----------------------------------------------\n` +
+                `${tableData}\n` +
+                `-----------------------------------------------\n` +
+                `Sent via Zoology Interactive Academic Portal`
+            );
+            window.location.href = `mailto:yaswanthkumargoli@gmail.com?subject=${subject}&body=${body}`;
+        }
+
+        // --- Audit Logic ---
+        async function generateHash(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text + "ZOOLOGY-SECRET-2026");
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function runAudit() {
+            const name = document.getElementById('auditName').value.trim();
+            const score = document.getElementById('auditScore').value.trim();
+            const timestamp = document.getElementById('auditTimestamp').value.trim();
+            const seal = document.getElementById('auditSeal').value.trim();
+            const resDiv = document.getElementById('auditResult');
+
+            if (!name || !score || !timestamp || !seal) { alert("Please fill all fields."); return; }
+
+            const expectedHash = await generateHash(`${name}|${score}|${timestamp}`);
+            resDiv.style.display = 'block';
+            if (seal === expectedHash) {
+                resDiv.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
+                resDiv.style.color = "var(--correct)";
+                resDiv.innerHTML = "✅ VERIFICATION SUCCESSFUL: Authenticity confirmed.";
+            } else {
+                resDiv.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
+                resDiv.style.color = "var(--accent)";
+                resDiv.innerHTML = "❌ VERIFICATION FAILED: Data has been tampered with.";
+            }
+        }
+
+        function resetData() {
+            if (confirm("Delete all tracking data permanently?")) {
+                localStorage.clear();
+                alert("Data reset.");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+
+</html>

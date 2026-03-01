@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theoretical Master File | Zoology Academic System</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --sidebar-width: 280px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --secondary: #3b82f6;
+            --accent: #fbbf24;
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .layout {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        aside h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--primary);
+            padding-left: 0.5rem;
+        }
+
+        aside ul {
+            list-style: none;
+        }
+
+        aside li {
+            margin-bottom: 0.5rem;
+        }
+
+        aside a {
+            text-decoration: none;
+            color: var(--text);
+            display: block;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        aside a:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--secondary);
+        }
+
+        aside a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 3rem;
+            background: var(--card-bg);
+            margin: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        article {
+            display: none;
+        }
+
+        article.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin: 2rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .term {
+            font-weight: bold;
+            color: var(--primary);
+            background: rgba(30, 58, 138, 0.05);
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        .revision-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 5px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .revision-box h4 {
+            color: #b45309;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(30, 58, 138, 0.05);
+            color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            main {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        @media print {
+
+            aside,
+            .theme-toggle,
+            .btn-group,
+            footer,
+            header {
+                display: none !important;
+            }
+
+            main {
+                margin: 0;
+                border: none;
+                box-shadow: none;
+                width: 100%;
+            }
+
+            article {
+                display: block !important;
+                page-break-after: always;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            h2,
+            h3 {
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Zoology Theoretical Repository</h1>
+        <div class="subtitle">Designed & Developed by Yaswanth Kumar</div>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <h3>Subject Catalog</h3>
+            <ul id="sidebar-nav">
+                <li><a href="#cell-biology" class="active">Cell Biology</a></li>
+                <li><a href="#animal-physiology">Animal Physiology</a></li>
+                <li><a href="#genetics">Genetics & Molecular Bio</a></li>
+                <li><a href="#evolution">Evolution & Ecology</a></li>
+                <li><a href="#classification">Animal Classification</a></li>
+            </ul>
+            <div class="btn-group" style="flex-direction: column; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="prepareAndPrint()">🖨️ Export Full PDF</button>
+                <a href="./index.html" class="btn btn-outline" style="text-align: center;">🏠 Dashboard</a>
+            </div>
+        </aside>
+
+        <main id="content">
+            <!-- CELL BIOLOGY -->
+            <article id="cell-biology" class="active">
+                <h2>Cell Biology: The Architecture of Life</h2>
+                <p>Cell biology, or <span class="term">cytology</span>, is the branch of biology that studies the
+                    structure, function, and behavior of cells. All living organisms are made of cells. A cell is the
+                    basic unit of life that is responsible for living and functioning of organisms. The concept of the
+                    cell was first introduced by Robert Hooke in 1665, but it wasn't until the 19th century that the
+                    Cell Theory was formally articulated by Schleiden, Schwann, and Virchow.</p>
+
+                <h3>I. Structural Organization (Plasma Membrane)</h3>
+                <p>The plasma membrane acts as a selective barrier, maintaining the unique internal environment of the
+                    cell. According to the <span class="term">Fluid Mosaic Model</span> proposed by Singer and Nicolson
+                    in 1972, the membrane is a dynamic, "ocean-like" structure of phospholipids with embedded proteins.
+                    These proteins facilitate <span class="term">active transport</span>, <span class="term">facilitated
+                        diffusion</span>, and cell signaling. For NET/SET candidates, understanding the role of
+                    cholesterol in membrane fluidity and the function of Na+/K+ ATPase pumps is crucial.</p>
+
+                <h3>II. Organelle Functionality</h3>
+                <p>The <span class="term">Mitochondria</span>, often termed the powerhouse of the cell, are
+                    semi-autonomous organelles possessing their own DNA (mtDNA) and 70S ribosomes—supporting the
+                    Endosymbiotic Theory. They are the site of the Krebs cycle and Oxidative Phosphorylation. The <span
+                        class="term">Endoplasmic Reticulum (ER)</span> serves as a transportation network; Rough ER
+                    (RER) is studded with ribosomes for protein synthesis, while Smooth ER (SER) is involved in lipid
+                    synthesis and detoxification.</p>
+
+                <p>The <span class="term">Golgi Apparatus</span> acts as a post-office, modifying, sorting, and
+                    packaging proteins into vesicles. <span class="term">Lysosomes</span>, containing hydrolytic
+                    enzymes, are the "suicide bags," essential for autophagy and intracellular digestion. In specialized
+                    zoological studies, the study of <span class="term">Peroxisomes</span> and their role in
+                    photorespiration and hydrogen peroxide metabolism is a recurring exam topic.</p>
+
+                <h3>Comparison: Prokaryotic vs. Eukaryotic Cells</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Prokaryotic</th>
+                            <th>Eukaryotic</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nucleus</td>
+                            <td>Absent (Nucleoid)</td>
+                            <td>Present (Double-membrane bound)</td>
+                        </tr>
+                        <tr>
+                            <td>Ribosomes</td>
+                            <td>70S Type</td>
+                            <td>80S (Cytoplasmic) / 70S (Organellar)</td>
+                        </tr>
+                        <tr>
+                            <td>Membrane Organelles</td>
+                            <td>Absent</td>
+                            <td>Present (Mito, ER, Golgi, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td>Genetic Material</td>
+                            <td>Single Circular DNA</td>
+                            <td>Linear DNA with Histones</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="revision-box">
+                    <h4>Quick Revision: Cell Cycle</h4>
+                    <p>Interphase (G1, S, G2) occupies 95% of the cell cycle duration. DNA replication occurs strictly
+                        in the <span class="term">S Phase</span>. The M-Phase (Mitosis) follows, consisting of
+                        Karyokinesis and Cytokinesis. Remember: Colchicine inhibits spindle formation by binding to
+                        tubulin, a common question in NET exams.</p>
+                </div>
+
+                <h3>Common Misconceptions</h3>
+                <p>Students often confuse <span class="term">Diffusion</span> with <span class="term">Osmosis</span>.
+                    Remember, Osmosis specifically refers to the movement of solvent molecules (water) across a
+                    semi-permeable membrane, while diffusion is the general movement of any solute or gas molecules from
+                    high to low concentration. Another misconception is that animal cells have no shape-maintaining
+                    structure; actually, the <span class="term">Cytoskeleton</span> (Microtubules, Microfilaments,
+                    Intermediate filaments) provides robust structural integrity.</p>
+            </article>
+
+            <!-- ANIMAL PHYSIOLOGY -->
+            <article id="animal-physiology">
+                <h2>Animal Physiology: Mechanism of Function</h2>
+                <p>Animal physiology explores how different organ systems work together to maintain <span
+                        class="term">Homeostasis</span>—the stable internal state of the body. This involves complex
+                    interactions between the nervous system, endocrine glands, and mechanical systems like circulation
+                    and respiration.</p>
+
+                <h3>I. Circulatory System & Cardiac Cycle</h3>
+                <p>The mammalian heart is a four-chambered muscular organ. The <span class="term">Cardiac Cycle</span>
+                    consists of atrial systole, ventricular systole, and complete cardiac diastole, lasting
+                    approximately 0.8 seconds. Deoxygenated blood returns via the Superior and Inferior Vena Cavae to
+                    the Right Atrium, passes through the Tricuspid valve into the Right Ventricle, and is pumped to the
+                    lungs for oxygenation. The intrinsic conduction system, starting from the <span class="term">SA
+                        Node</span> (Pacemaker), followed by the AV Node, Bundle of His, and Purkinje fibers, ensures
+                    rhythmic contraction.</p>
+
+                <h3>II. Respiratory Physiology</h3>
+                <p>Respiration involves both ventilation (breathing) and gas exchange. The transport of oxygen is
+                    primarily facilitated by <span class="term">Hemoglobin</span>, forming Oxyhemoglobin. The <span
+                        class="term">Oxygen-Hemoglobin Dissociation Curve</span> is a sigmoid curve; factors like high
+                    CO2, low pH, and high temperature shift it to the right (Bohr Effect), facilitating oxygen release
+                    in tissues. Carbon dioxide is transported largely as bicarbonate ions (HCO3-) in the plasma, a
+                    process catalyzed by Carbonic Anhydrase.</p>
+
+                <div class="revision-box">
+                    <h4>Mechanism: Muscle Contraction</h4>
+                    <p>Based on the <span class="term">Sliding Filament Theory</span> (Huxley and Hanson), muscle
+                        contraction occurs when Thick filaments (Myosin) pull Thin filaments (Actin) towards the M-line.
+                        Calcium ions released from the Sarcoplasmic Reticulum bind to Troponin C, moving Tropomyosin
+                        aside to expose the binding sites on actin. ATP is required for both contraction and relaxation.
+                    </p>
+                </div>
+
+                <h3>NET/SET Conceptual Discussion: Counter-Current Mechanism</h3>
+                <p>The kidney maintains osmolality through the counter-current multiplier in the Loop of Henle and
+                    exchanger in the Vasa Recta. This allows terrestrial animals to produce hypertonic urine, conserving
+                    water. Understanding the role of ADH (Vasopressin) in the Distal Convoluted Tubule (DCT) and
+                    Collecting Duct is vital for competitive exams.</p>
+            </article>
+
+            <!-- GENETICS -->
+            <article id="genetics">
+                <h2>Genetics & Molecular Biology</h2>
+                <p>Genetics is the study of heredity and variation. Modern molecular biology goes deeper to study the
+                    chemical nature of the gene and the molecular basis of inheritance.</p>
+
+                <h3>I. Mendelian Principles</h3>
+                <p>Gregor Mendel, the father of genetics, formulated three laws. The Law of Segregation states that
+                    alleles separate during gamete formation. The Law of Independent Assortment states that different
+                    gene pairs segregate independently. However, <span class="term">Linkage</span> (discovered by Morgan
+                    in Drosophila) is the major exception to independent assortment, where genes on the same chromosome
+                    tend to be inherited together.</p>
+
+                <h3>II. The Central Dogma</h3>
+                <p>Proposed by Francis Crick, the central dogma explains the flow of genetic information: DNA &rarr; RNA
+                    &rarr; Protein. <span class="term">Replication</span> is semiconservative (Meselson-Stahl
+                    experiment). <span class="term">Transcription</span> involves the synthesis of mRNA by RNA
+                    Polymerase. <span class="term">Translation</span> occurs using the genetic code—a triplet,
+                    non-overlapping, and universal system. The <span class="term">Wobble Hypothesis</span> explains how
+                    61 codons can be read by fewer than 61 tRNAs.</p>
+
+                <div class="revision-box">
+                    <h4>Focus Topic: Operon Models</h4>
+                    <p>The <span class="term">Lac Operon</span> in E. coli is an inducible system. In the absence of
+                        lactose, the Repressor protein binds to the Operator, blocking RNA Polymerase. When Allolactose
+                        is present, it binds to the repressor, allowing transcription of Z, Y, and A genes. In contrast,
+                        the Trp Operon is a repressible system governed by feedback inhibition.</p>
+                </div>
+
+                <h3>Recombinant DNA Technology</h3>
+                <p>Tools like <span class="term">Restriction Endonucleases</span> (Molecular Scissors), Ligases, and
+                    cloning vectors (Plasmids, Cosmids) allow scientists to manipulate DNA. PCR (Polymerase Chain
+                    Reaction) is used to amplify DNA sequences million-fold, dependent on heat-stable Taq Polymerase and
+                    thermal cycling.</p>
+            </article>
+
+            <!-- EVOLUTION -->
+            <article id="evolution">
+                <h2>Evolution & Ecology</h2>
+                <p>Evolution is the process of gradual change in the inherited characteristics of a population over
+                    generations. Ecology studies the relationships between biotic and abiotic factors in the
+                    environment.</p>
+
+                <h3>I. Evolutionary Theories</h3>
+                <p>Lamarckism proposed the "Inheritance of Acquired Characters," while Darwinism emphasized <span
+                        class="term">Natural Selection</span> ("Survival of the Fittest"). The Modern Synthetic Theory
+                    combines Darwinism with Mendelian genetics, identifying mutation, recombination, isolation, and
+                    selection as the key drivers of speciation. <span class="term">Genetic Drift</span> (Sewall Wright
+                    Effect) highlights the role of chance events in small populations.</p>
+
+                <h3>II. Population Ecology</h3>
+                <p>Populations exhibit specific growth patterns: Exponential (J-shaped) and Logistic (S-shaped).
+                    Logistic growth introduces the concept of <span class="term">Carrying Capacity (K)</span>, the
+                    maximum population size an environment can sustain. Species can be categorized as r-strategists
+                    (high reproduction, short life) or K-strategists (few offspring, high parental care).</p>
+
+                <div class="revision-box">
+                    <h4>Ecological Succession</h4>
+                    <p>The orderly process of community change. Primary succession starts on bare rock/water
+                        (Lithosere/Hydrosere), starting with a Pioneer community (Lichens) and advancing to a stable
+                        Climax community. Productivity is measured as Gross Primary Productivity (GPP) and Net Primary
+                        Productivity (NPP).</p>
+                </div>
+
+                <h3>Ethology: Animal Behavior</h3>
+                <p>Key concepts include <span class="term">Imprinting</span> (Lorenz), <span class="term">Classical
+                        Conditioning</span> (Pavlov), and <span class="term">Altruism</span> (Kin Selection/Hamilton's
+                    Rule). Territoriality and communication (like the Honeybee Dance) are critical areas of zoological
+                    interest.</p>
+            </article>
+
+            <!-- CLASSIFICATION -->
+            <article id="classification">
+                <h2>Animal Classification: Biodiversity</h2>
+                <p>Taxonomy involves the identification, naming, and classification of organisms. The binomial
+                    nomenclature system by Linnaeus remains the standard.</p>
+
+                <h3>I. Invertebrates</h3>
+                <p>The progression from <span class="term">Protozoa</span> (unicellular) to <span
+                        class="term">Echinodermata</span> shows increasing complexity in symmetry and body plans.
+                    Poriferans exhibit a unique canal system. Cnidarians show polymorphism (Polyp and Medusa).
+                    Platyhelminthes (Flatworms) introduce bilateral symmetry and cephalization. Arthropods are the
+                    largest phylum, defined by jointed appendages and chitinous exoskeletons.</p>
+
+                <h3>II. Chordates</h3>
+                <p>Defined by four features: Notochord, Dorsal hollow nerve cord, Pharyngeal gill slits, and Post-anal
+                    tail. It is divided into Urochordata, Cephalochordata, and Vertebrata. Mammals are characterized by
+                    mammary glands, hair, and a four-chambered heart. The classification of various groups like
+                    Cyclostomata, Elasmobranchii, and Reptilia are essential for morphology-based exams.</p>
+
+                <div class="revision-box">
+                    <h4>Systematic Mnemonics</h4>
+                    <p><strong>KPCOFGS:</strong> <strong>K</strong>ing <strong>P</strong>hilipp <strong>C</strong>ame
+                        <strong>O</strong>ver <strong>F</strong>or <strong>G</strong>ood <strong>S</strong>oup (Kingdom,
+                        Phylum, Class, Order, Family, Genus, Species).
+                    </p>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Yaswanth Kumar | Zoology Academic Portal | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Theme
+        const applyTheme = (theme) => { document.documentElement.setAttribute('data-theme', theme); };
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('zoology_theme', target); applyTheme(target);
+            document.getElementById('theme-icon').textContent = target === 'dark' ? '☀️' : '🌙';
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('zoology_theme') || 'light';
+            applyTheme(saved);
+
+            if (window.location.protocol === 'file:' && (window.location.href.includes('/temp/') || window.location.href.includes('/AppData/Local/Temp/') || window.location.href.includes('content://'))) {
+                const warn = document.createElement('div');
+                warn.style = "background:#f59e0b; color:#000; padding:1rem; text-align:center; font-weight:bold; position:fixed; top:0; left:0; right:0; z-index:9999;";
+                warn.textContent = "⚠️ ZIP NOT EXTRACTED: Navigation may fail. Please extract the ZIP folder before use.";
+                document.body.prepend(warn);
+            }
+
+            const btn = document.createElement('button');
+            btn.className = 'theme-toggle'; btn.onclick = toggleTheme;
+            btn.innerHTML = `<span id="theme-icon">${saved === 'dark' ? '☀️' : '🌙'}</span>`;
+            document.body.appendChild(btn);
+        });
+
+        // Navigation
+        const links = document.querySelectorAll('#sidebar-nav a');
+        const articles = document.querySelectorAll('article');
+
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.getAttribute('href').substring(1);
+
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                articles.forEach(art => {
+                    art.classList.remove('active');
+                    if (art.id === target) art.classList.add('active');
+                });
+
+                // Scroll to top of content
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        function prepareAndPrint() {
+            const originalTheme = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', 'light');
+            // Show all articles for printing
+            const style = document.createElement('style');
+            style.id = 'print-all';
+            style.innerHTML = 'article { display: block !important; }';
+            document.head.appendChild(style);
+
+            setTimeout(() => {
+                window.print();
+                document.documentElement.setAttribute('data-theme', originalTheme);
+                document.getElementById('print-all').remove();
+            }, 100);
+        }
+
+        // Handle URL hash on load
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const link = document.querySelector(`a[href="#${hash}"]`);
+            if (link) link.click();
+        }
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js');
+            }
+        });
+    </script>
+</body>
+
+</html>

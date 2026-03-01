@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Revision | Zoology Academic System</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --secondary: #3b82f6;
+            --accent: #fbbf24;
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: 0.3s;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .topic-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .topic-section h2 {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            font-size: 1.8rem;
+        }
+
+        .mnemonic-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .mnemonic-box strong {
+            color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 0.8rem 1rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(30, 58, 138, 0.05);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-family: monospace;
+            color: var(--primary);
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 1.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            background-color: var(--card-bg);
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                font-size: 12pt;
+            }
+
+            .toolbar,
+            .theme-toggle,
+            footer,
+            .btn {
+                display: none !important;
+            }
+
+            .topic-section {
+                box-shadow: none;
+                border: none;
+                page-break-inside: avoid;
+                padding: 0;
+                margin-bottom: 2rem;
+            }
+
+            * {
+                transition: none !important;
+            }
+
+            h2 {
+                color: black !important;
+                border-bottom-color: black !important;
+            }
+
+            .mnemonic-box {
+                border-left-color: black !important;
+                background: #f0f0f0 !important;
+            }
+
+            th {
+                background: #e0e0e0 !important;
+                color: black !important;
+            }
+
+            .formula-card {
+                border-color: black !important;
+                color: black !important;
+            }
+
+            a {
+                text-decoration: none;
+                color: black;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Rapid Exam Revision</h1>
+        <div class="subtitle">High-Yield Cheat Sheet | Designed & Developed by Yaswanth Kumar</div>
+    </header>
+
+    <main class="container">
+        <div class="toolbar">
+            <a href="./index.html" class="btn btn-outline">&larr; Dashboard</a>
+            <button class="btn" style="background: var(--accent); color: #fff;" onclick="prepareAndPrint()">🖨️ Export
+                PDF / Print</button>
+        </div>
+
+        <section class="topic-section">
+            <h2>1. Genetics & Inheritance</h2>
+
+            <div class="mnemonic-box">
+                <strong>Mnemonic for Mitosis Phases:</strong> "<strong>I P</strong>assed <strong>M</strong>y
+                <strong>A</strong>natomy <strong>T</strong>est" = Interphase, Prophase, Metaphase, Anaphase, Telophase.
+            </div>
+
+            <p><strong>Key Bullet Summaries:</strong></p>
+            <ul>
+                <li><strong>Mendel's Laws:</strong> Law of Dominance, Law of Segregation (Anaphase I), Law of
+                    Independent Assortment (Metaphase I).</li>
+                <li><strong>Incomplete Dominance:</strong> Red + White = Pink flowers (1:2:1 phenotypic ratio).</li>
+                <li><strong>Co-Dominance:</strong> ABO Blood grouping (both alleles expressed equally).</li>
+                <li><strong>Linkage:</strong> Exceptions to Independent Assortment. Crossing over occurs during
+                    Pachytene of Prophase I.</li>
+            </ul>
+
+            <div class="formula-card">
+                Hardy-Weinberg Equation: p² + 2pq + q² = 1 | p + q = 1
+            </div>
+            <p style="text-align:center; font-size:0.9rem; opacity:0.8; margin-top:-0.5rem;">(Assumes random mating, no
+                mutation, large population, no selection)</p>
+        </section>
+
+        <section class="topic-section">
+            <h2>2. Animal Classification (Phyla)</h2>
+
+            <div class="mnemonic-box">
+                <strong>Memory Trick for Phyla Order:</strong> "<strong>P</strong>rince <strong>C</strong>harles
+                <strong>P</strong>lays <strong>N</strong>ice <strong>A</strong>nd <strong>A</strong>lways
+                <strong>M</strong>akes <strong>E</strong>xcellent <strong>C</strong>ookies" <br>
+                (Porifera, Cnidaria, Platyhelminthes, Nematoda, Annelida, Arthropoda, Mollusca, Echinodermata, Chordata)
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phylum</th>
+                        <th>Symmetry</th>
+                        <th>Coelom</th>
+                        <th>Defining Feature</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Porifera</td>
+                        <td>Asymmetrical</td>
+                        <td>Acoelomate</td>
+                        <td>Water canal system (Ostia/Osculum)</td>
+                    </tr>
+                    <tr>
+                        <td>Platyhelminthes</td>
+                        <td>Bilateral</td>
+                        <td>Acoelomate</td>
+                        <td>Flame cells for excretion</td>
+                    </tr>
+                    <tr>
+                        <td>Annelida</td>
+                        <td>Bilateral</td>
+                        <td>True Coelom</td>
+                        <td>Metameric segmentation</td>
+                    </tr>
+                    <tr>
+                        <td>Arthropoda</td>
+                        <td>Bilateral</td>
+                        <td>True Coelom</td>
+                        <td>Jointed appendages, Chitinous skeleton</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="topic-section">
+            <h2>3. Animal Physiology</h2>
+
+            <p><strong>Heart Blood Flow Summary:</strong></p>
+            <ul>
+                <li>Vena Cava &rarr; Right Atrium &rarr; Tricuspid Valve &rarr; Right Ventricle</li>
+                <li>Pulmonary Artery &rarr; Lungs (Oxygenation) &rarr; Pulmonary Veins</li>
+                <li>Left Atrium &rarr; Bicuspid (Mitral) Valve &rarr; Left Ventricle &rarr; Aorta &rarr; Body</li>
+            </ul>
+
+            <div class="mnemonic-box">
+                <strong>Cranial Nerves (Functions):</strong> "Some Say Marry Money But My Brother Says Big Brains Matter
+                More"<br>
+                (S = Sensory, M = Motor, B = Both)
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hormone</th>
+                        <th>Source Gland</th>
+                        <th>Primary Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Insulin</td>
+                        <td>Pancreas (Beta cells)</td>
+                        <td>Lowers blood glucose (Glycogenesis)</td>
+                    </tr>
+                    <tr>
+                        <td>Glucagon</td>
+                        <td>Pancreas (Alpha cells)</td>
+                        <td>Raises blood glucose (Glycogenolysis)</td>
+                    </tr>
+                    <tr>
+                        <td>Thyroxine (T4)</td>
+                        <td>Thyroid Gland</td>
+                        <td>Regulates basal metabolic rate (BMR)</td>
+                    </tr>
+                    <tr>
+                        <td>Cortisol</td>
+                        <td>Adrenal Cortex</td>
+                        <td>Stress hormone, increases blood glucose</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Yaswanth Kumar | Zoology Academic Portal | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        const applyTheme = (theme) => { document.documentElement.setAttribute('data-theme', theme); };
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('zoology_theme', target); applyTheme(target);
+            document.getElementById('theme-icon').textContent = target === 'dark' ? '☀️' : '🌙';
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('zoology_theme') || 'light';
+            applyTheme(saved);
+
+            if (window.location.protocol === 'file:' && (window.location.href.includes('/temp/') || window.location.href.includes('/AppData/Local/Temp/') || window.location.href.includes('content://'))) {
+                const warn = document.createElement('div');
+                warn.style = "background:#f59e0b; color:#000; padding:1rem; text-align:center; font-weight:bold; position:fixed; top:0; left:0; right:0; z-index:9999;";
+                warn.textContent = "⚠️ ZIP NOT EXTRACTED: Navigation may fail. Please extract the ZIP folder before use.";
+                document.body.prepend(warn);
+            }
+
+            const btn = document.createElement('button');
+            btn.className = 'theme-toggle'; btn.onclick = toggleTheme; btn.title = "Toggle Theme";
+            btn.innerHTML = `<span id="theme-icon">${saved === 'dark' ? '☀️' : '🌙'}</span>`;
+            document.body.appendChild(btn);
+        });
+
+        function prepareAndPrint() {
+            // Force light mode for printing
+            const originalTheme = document.documentElement.getAttribute('data-theme');
+            document.documentElement.setAttribute('data-theme', 'light');
+
+            setTimeout(() => {
+                window.print();
+                // Restore theme after print dialog closes
+                document.documentElement.setAttribute('data-theme', originalTheme);
+            }, 100);
+        }
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js');
+            }
+        });
+    </script>
+</body>
+
+</html>

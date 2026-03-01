@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Dashboard | Zoology Academic System</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="apple-touch-icon" href="./icons/icon-512.png">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --secondary: #3b82f6;
+            --accent: #fbbf24;
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 3rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header .subtitle {
+            color: var(--text);
+            opacity: 0.8;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-color: var(--secondary);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-action {
+            color: var(--secondary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.2s;
+        }
+
+        .card:hover .card-action {
+            gap: 0.8rem;
+        }
+
+        .lecturer-info {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .lecturer-info h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .lecturer-info p {
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.95rem;
+            background-color: var(--card-bg);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="extractionWarning"
+        style="background: var(--accent); color: #000; padding: 0.8rem; text-align: center; font-weight: 700; display: none; position: sticky; top: 0; z-index: 1000;">
+        ⚠️ IMPORTANT: Ensure you have EXTRACTED the entire ZIP folder to your phone's internal storage before using this
+        portal.
+    </div>
+
+    <header>
+        <h1>Zoology Interactive Academic System</h1>
+        <div class="subtitle">Designed & Developed by Yaswanth Kumar</div>
+    </header>
+
+    <main class="container">
+        <div class="grid">
+            <a href="./theory.html" class="card">
+                <div class="card-icon">📖</div>
+                <div class="card-title">Deep Theory</div>
+                <div class="card-desc">Comprehensive professor-level theoretical content for B.Sc, NET, and SET.</div>
+                <div class="card-action">Access Library <span>→</span></div>
+            </a>
+
+            <a href="./competitive.html" class="card">
+                <div class="card-icon">🎯</div>
+                <div class="card-title">Competitive Exam Mode</div>
+                <div class="card-desc">100 mixed MCQs with timer, negative marking, and performance tracking.</div>
+                <div class="card-action">Start Exam <span>→</span></div>
+            </a>
+
+            <a href="./quizzes.html" class="card">
+                <div class="card-icon">📝</div>
+                <div class="card-title">Practice Quizzes</div>
+                <div class="card-desc">Topic-wise quizzes with instant feedback, explanations, and retry options.</div>
+                <div class="card-action">Practice Now <span>→</span></div>
+            </a>
+
+            <a href="./virtual-lab.html" class="card">
+                <div class="card-icon">🔬</div>
+                <div class="card-title">Virtual Lab</div>
+                <div class="card-desc">Interactive simulations for mitosis, staining, heart blood flow, and DNA.</div>
+                <div class="card-action">Enter Lab <span>→</span></div>
+            </a>
+
+            <a href="./revision.html" class="card">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">Cheat Sheet Revision</div>
+                <div class="card-desc">High-yield summaries, tables, mnemonics, and printable PDF exports.</div>
+                <div class="card-action">Quick Revise <span>→</span></div>
+            </a>
+
+            <a href="./admin.html" class="card">
+                <div class="card-icon">📊</div>
+                <div class="card-title">Admin Dashboard</div>
+                <div class="card-desc">Monitor student progress, quiz attempts, and overall performance statistics.
+                </div>
+                <div class="card-action">Admin Login <span>→</span></div>
+            </a>
+        </div>
+
+        <div class="lecturer-info">
+            <h2>About The Author</h2>
+            <p>Welcome to the ultimate offline Zoology portal. This system is designed for meticulous self-study,
+                classroom teaching, and rigorous exam preparation. Emphasizing conceptual clarity and exam-readiness,
+                the modules herein cover the entire gamut of B.Sc and competitive Zoology.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Yaswanth Kumar | Zoology Academic Portal | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Theme Toggle Logic
+        const applyTheme = (theme) => {
+            document.documentElement.setAttribute('data-theme', theme);
+            const icon = document.getElementById('theme-icon');
+            if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        };
+
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('zoology_theme', target);
+            applyTheme(target);
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('zoology_theme') || 'light';
+            applyTheme(saved);
+
+            // Simple check for unextracted ZIP (some browsers show a weird path for temp files)
+            if (window.location.protocol === 'file:' && (window.location.href.includes('/temp/') || window.location.href.includes('/AppData/Local/Temp/'))) {
+                document.getElementById('extractionWarning').style.display = 'block';
+            } else if (window.location.href.includes('content://')) {
+                // Common mobile content provider URI for zip viewers
+                document.getElementById('extractionWarning').style.display = 'block';
+            }
+
+            const btn = document.createElement('button');
+            btn.className = 'theme-toggle';
+            btn.onclick = toggleTheme;
+            btn.title = "Toggle Dark/Light Mode";
+            btn.innerHTML = `<span id="theme-icon">${saved === 'dark' ? '☀️' : '🌙'}</span>`;
+            document.body.appendChild(btn);
+        });
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registered!', reg))
+                    .catch(err => console.log('Service Worker registration failed: ', err));
+            });
+        }
+    </script>
+</body>
+
+</html>

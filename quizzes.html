@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Mode | Zoology Academic System</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --wrong: #ef4444;
+            --correct: #10b981;
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --secondary: #3b82f6;
+            --accent: #34d399;
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: 0.3s;
+        }
+
+        header {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Stats Dashboard */
+        .stats-dashboard {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-around;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-lbl {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Topic Selection */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .topic-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+            box-shadow: var(--shadow);
+        }
+
+        .topic-btn:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .topic-btn h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Quiz UI */
+        #quiz-area {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: var(--secondary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .option.correct {
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--correct);
+        }
+
+        .option.wrong {
+            border-color: var(--wrong);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--wrong);
+        }
+
+        .option.disabled {
+            cursor: default;
+        }
+
+        #explanation-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg);
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        #explanation-box strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            margin-top: 1.5rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+
+        .results-area {
+            display: none;
+            text-align: center;
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .results-area h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .score-big {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin: 1.5rem 0;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Zoology Practice Quizzes</h1>
+        <div class="subtitle">Instant Feedback & Concepts | Designed & Developed by Yaswanth Kumar</div>
+    </header>
+
+    <main class="container">
+        <!-- Dashboard Section -->
+        <div id="dashboard-view">
+            <div class="stats-dashboard">
+                <div class="stat-item"><span class="stat-val" id="totalAttempted">0</span><span
+                        class="stat-lbl">Quizzes</span></div>
+                <div class="stat-item"><span class="stat-val" id="avgAccuracy">0%</span><span class="stat-lbl">Avg
+                        Accuracy</span></div>
+                <div class="stat-item"><span class="stat-val" id="topTopic"
+                        style="font-size: 1.2rem; padding-top: 0.5rem;">N/A</span><span
+                        class="stat-lbl">Strongest</span></div>
+            </div>
+
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">Select Topic to Practice:</h3>
+            <div class="topic-grid">
+                <div class="topic-btn" onclick="startQuiz('Cell Biology')">
+                    <h4>Cell Biology</h4>
+                    <p>Plasma membrane, organelles, cycle</p>
+                </div>
+                <div class="topic-btn" onclick="startQuiz('Physiology')">
+                    <h4>Animal Physiology</h4>
+                    <p>Heart, Lungs, Kidneys, Muscles</p>
+                </div>
+                <div class="topic-btn" onclick="startQuiz('Genetics')">
+                    <h4>Genetics</h4>
+                    <p>Mendel, Linkage, DNA, RNA</p>
+                </div>
+                <div class="topic-btn" onclick="startQuiz('Evolution')">
+                    <h4>Evolution & Ecology</h4>
+                    <p>Natural Selection, Biomes, Ethics</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="./index.html" class="btn btn-outline">&larr; Back to Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div id="quiz-area">
+            <div class="q-header">
+                <span id="q-topic">Topic: Cell Biology</span>
+                <span id="q-count">Question: 1 / 5</span>
+            </div>
+            <div class="question-text" id="q-text">Loading question...</div>
+            <div class="options-list" id="options-list">
+                <!-- Options injected here -->
+            </div>
+            <div id="explanation-box">
+                <strong>Conceptual Explanation:</strong>
+                <span id="exp-text">Content goes here...</span>
+            </div>
+            <button class="btn btn-primary" id="next-btn" style="display: none;" onclick="nextQuestion()">Next Question
+                &rarr;</button>
+        </div>
+
+        <!-- Results Interface -->
+        <div id="results-area" class="results-area">
+            <h2>Quiz Completed!</h2>
+            <div class="score-big" id="final-score">80%</div>
+            <p id="score-comment">Great performance! You have a solid grasp on this topic.</p>
+            <div class="btn-group" style="margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="location.reload()">Return to Selection</button>
+                <a href="./index.html" class="btn btn-outline">Dashboard</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Yaswanth Kumar | Zoology Academic Portal | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // --- Data & State ---
+        const questionBank = {
+            'Cell Biology': [
+                { q: "Which organelle is responsible for detoxification and lipid synthesis?", a: ["Smooth ER", "Rough ER", "Golgi Body", "Mitochondria"], c: 0, e: "The Smooth Endoplasmic Reticulum (SER) is specialized for lipid synthesis, steroid production, and detoxification of drugs/toxins." },
+                { q: "DNA replication occurs in which phase of the cell cycle?", a: ["G1 phase", "S phase", "G2 phase", "M phase"], c: 1, e: "The S (Synthesis) phase is when the DNA content of the cell is doubled." },
+                { q: "Which model describes the structure of the plasma membrane?", a: ["Lock and Key", "Fluid Mosaic", "Sandwich Model", "Unit Membrane"], c: 1, e: "Singer and Nicolson (1972) proposed the Fluid Mosaic Model, describing it as a lipid sea with protein icebergs." },
+                { q: "Where does the Krebs Cycle occur in Eukaryotic cells?", a: ["Cytosol", "Mitochondrial Matrix", "Inner membrane", "Ribosomes"], c: 1, e: "While Glycolysis occurs in the Cytosol, the Krebs Cycle takes place in the Mitochondrial Matrix." },
+                { q: "A cell that lacks membrane-bound organelles is classified as:", a: ["Eukaryotic", "Prokaryotic", "Symbiotic", "Unicellular"], c: 1, e: "Prokaryotes (like bacteria) lack a nucleus and membrane-bound organelles." }
+            ],
+            'Physiology': [
+                { q: "The pace-maker of the heart is:", a: ["AV Node", "Bundle of His", "SA Node", "Purkinje Fibers"], c: 2, e: "The Sino-Atrial (SA) node initiates the electrical impulse for the heartbeat." },
+                { q: "Which enzyme catalyzes the formation of bicarbonate in blood?", a: ["Lipase", "Carbonic Anhydrase", "Amylase", "Trypsin"], c: 1, e: "Carbonic Anhydrase in RBCs and plasma facilitates CO2 transport as bicarbonate." },
+                { q: "The structural and functional unit of the kidney is:", a: ["Neuron", "Nephron", "Alveoli", "Ostia"], c: 1, e: "Each kidney contains millions of nephrons that filter blood and form urine." },
+                { q: "Oxygen dissociation curve shifts to the right during:", a: ["Low temperature", "High pH", "Low CO2", "High Temperature"], c: 3, e: "Factors like high temperature, low pH, and high CO2 reduce Hb affinity for O2 (Bohr Effect)." },
+                { q: "Sliding Filament Theory explains:", a: ["Nerve impulse", "Muscle contraction", "Blood clotting", "Digestion"], c: 1, e: "It describes how actin and myosin filaments slide past each other to shorten the muscle." }
+            ],
+            'Genetics': [
+                { q: "Mendel's Law of Independent Assortment is based on:", a: ["Monohybrid cross", "Dihybrid cross", "Test cross", "Back cross"], c: 1, e: "Independence is only observed when looking at two or more traits simultaneously." },
+                { q: "Which nitrogenous base is NOT found in DNA?", a: ["Adenine", "Guanine", "Uracil", "Thymine"], c: 2, e: "Uracil replaces Thymine in RNA molecules." },
+                { q: "The non-overlapping triplet nature of genetic code was proposed by:", a: ["Watson", "Crick", "George Gamow", "Mendel"], c: 2, e: "While Watson and Crick found the structure, Gamow deduced the triplet code logic." },
+                { q: "Genes located on the same chromosome that do not assort independently are:", a: ["Alleles", "Linked genes", "Hotspots", "Mutons"], c: 1, e: "Linkage keeps genes together, reducing the frequency of recombination." },
+                { q: "Who performed the experiment to prove semi-conservative replication?", a: ["Morgan", "Hershey-Chase", "Meselson-Stahl", "Griffith"], c: 2, e: "Using N15 isotope, they proved DNA replicates semi-conservatively." }
+            ],
+            'Evolution': [
+                { q: "The 'Survival of the Fittest' concept was coined by:", a: ["Lamarck", "Charles Darwin", "Herbert Spencer", "Wallace"], c: 1, e: "Darwin incorporated Spencer's phrase to describe natural selection in 'Origin of Species'." },
+                { q: "Homologous organs provide evidence for:", a: ["Convergent evolution", "Divergent evolution", "Parallel evolution", "Saltation"], c: 1, e: "Organs with same origin but different functions prove divergence from a common ancestor." },
+                { q: "The Sewall Wright effect is also known as:", a: ["Mutation", "Natural Selection", "Genetic Drift", "Isolation"], c: 2, e: "Genetic drift is the random change of allele frequencies in small populations." },
+                { q: "A stable community after a series of ecological successions is:", a: ["Pioneer", "Sere", "Climax", "Hydrophyte"], c: 2, e: "The climax community is the final, stable stage of succession." },
+                { q: "Lamarck's theory was based on:", a: ["Mutations", "Acquired characters", "Natural Selection", "Genetic Drift"], c: 1, e: "Lamarckism proposed that traits acquired in life are passed to offspring." }
+            ]
+        };
+
+        // --- Core Quiz Logic ---
+        let currentTopic = '';
+        let currentQuestions = [];
+        let qIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function startQuiz(topic) {
+            currentTopic = topic;
+            currentQuestions = [...questionBank[topic]].sort(() => Math.random() - 0.5); // Shuffle
+            qIndex = 0;
+            score = 0;
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            answered = false;
+            const q = currentQuestions[qIndex];
+            document.getElementById('q-topic').textContent = `Topic: ${currentTopic}`;
+            document.getElementById('q-count').textContent = `Question: ${qIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById('q-text').textContent = q.q;
+            document.getElementById('explanation-box').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+
+            const list = document.getElementById('options-list');
+            list.innerHTML = '';
+            q.a.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = opt;
+                div.onclick = () => selectOption(idx, div);
+                list.appendChild(div);
+            });
+        }
+
+        function selectOption(idx, element) {
+            if (answered) return;
+            answered = true;
+            const q = currentQuestions[qIndex];
+            const options = document.querySelectorAll('.option');
+
+            if (idx === q.c) {
+                element.classList.add('correct');
+                score++;
+            } else {
+                element.classList.add('wrong');
+                options[q.c].classList.add('correct');
+            }
+
+            options.forEach(o => o.classList.add('disabled'));
+            document.getElementById('exp-text').textContent = q.e;
+            document.getElementById('explanation-box').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            qIndex++;
+            if (qIndex < currentQuestions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('results-area').style.display = 'block';
+            const percentage = Math.round((score / currentQuestions.length) * 100);
+            document.getElementById('final-score').textContent = `${percentage}%`;
+
+            let comment = "Keep studying to master this topic!";
+            if (percentage >= 80) comment = "Excellent! You are ready for competitive exams.";
+            else if (percentage >= 60) comment = "Good job! A little more revision will make you an expert.";
+            document.getElementById('score-comment').textContent = comment;
+
+            saveStats(percentage);
+        }
+
+        // --- Stats & Persistence ---
+        function saveStats(accuracy) {
+            let stats = JSON.parse(localStorage.getItem('zoology_quiz_stats') || '{"attempts": 0, "totalScore": 0, "topics": {}}');
+
+            stats.attempts++;
+            stats.totalScore += accuracy;
+
+            if (!stats.topics[currentTopic]) stats.topics[currentTopic] = { score: 0, attempts: 0 };
+            stats.topics[currentTopic].score += accuracy;
+            stats.topics[currentTopic].attempts++;
+
+            localStorage.setItem('zoology_quiz_stats', JSON.stringify(stats));
+            loadDashboardStats();
+        }
+
+        function loadDashboardStats() {
+            const stats = JSON.parse(localStorage.getItem('zoology_quiz_stats') || '{"attempts": 0, "totalScore": 0, "topics": {}}');
+            document.getElementById('totalAttempted').textContent = stats.attempts;
+
+            if (stats.attempts > 0) {
+                document.getElementById('avgAccuracy').textContent = `${Math.round(stats.totalScore / stats.attempts)}%`;
+            }
+
+            let best = "N/A";
+            let maxScore = -1;
+            for (const [topic, data] of Object.entries(stats.topics)) {
+                let topicAvg = data.score / data.attempts;
+                if (topicAvg > maxScore) { maxScore = topicAvg; best = topic; }
+            }
+            if (best !== "N/A") document.getElementById('topTopic').textContent = best;
+        }
+
+        // --- Theme ---
+        const applyTheme = (theme) => document.documentElement.setAttribute('data-theme', theme);
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('zoology_theme', target); applyTheme(target);
+            document.getElementById('theme-icon').textContent = target === 'dark' ? '☀️' : '🌙';
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('zoology_theme') || 'light';
+            applyTheme(saved);
+
+            if (window.location.protocol === 'file:' && (window.location.href.includes('/temp/') || window.location.href.includes('/AppData/Local/Temp/') || window.location.href.includes('content://'))) {
+                const warn = document.createElement('div');
+                warn.style = "background:#f59e0b; color:#000; padding:1rem; text-align:center; font-weight:bold; position:fixed; top:0; left:0; right:0; z-index:9999;";
+                warn.textContent = "⚠️ ZIP NOT EXTRACTED: Navigation may fail. Please extract the ZIP folder before use.";
+                document.body.prepend(warn);
+            }
+
+            const btn = document.createElement('button');
+            btn.className = 'theme-toggle'; btn.onclick = toggleTheme;
+            btn.innerHTML = `<span id="theme-icon">${saved === 'dark' ? '☀️' : '🌙'}</span>`;
+            document.body.appendChild(btn);
+
+            loadDashboardStats();
+        });
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js');
+            }
+        });
+    </script>
+</body>
+
+</html>

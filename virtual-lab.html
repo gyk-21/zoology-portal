@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab | Zoology Academic System</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --text: #0f172a;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #60a5fa;
+            --secondary: #3b82f6;
+            --accent: #34d399;
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: 0.3s;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+
+        .lab-module {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .lab-module h2 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            padding-right: 120px;
+        }
+
+        .badge {
+            position: absolute;
+            top: 2.5rem;
+            right: 2.5rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .simulation-area {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Gram Stain Specifics */
+        .step-btn {
+            margin: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .bacteria-slide {
+            width: 150px;
+            height: 150px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            margin: 1rem auto;
+            transition: background 1s;
+            border: 2px solid #ccc;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bacteria-cell {
+            width: 40px;
+            height: 20px;
+            border-radius: 10px;
+            background: transparent;
+            border: 2px dashed #999;
+            margin: 5px;
+            transition: 1s;
+        }
+
+        /* Mitosis Specifics */
+        .mitosis-grid {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .cell-img {
+            width: 100px;
+            height: 100px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--primary);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cell-img::after {
+            content: '?';
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .cell-img.identified {
+            background: var(--accent);
+            border-color: var(--accent);
+            cursor: default;
+        }
+
+        .cell-img.identified::after {
+            content: '✓';
+            color: white;
+        }
+
+        /* Heart Specifics */
+        .heart-diagram {
+            width: 250px;
+            height: 250px;
+            background: #fee2e2;
+            border-radius: 20px;
+            border: 4px solid #ef4444;
+            position: relative;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .chamber {
+            width: 50%;
+            height: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border: 1px dashed #ef4444;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chamber:hover {
+            background: #fecaca;
+        }
+
+        /* DNA Specifics */
+        .dna-strand {
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            font-family: monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: var(--primary);
+        }
+
+        .dna-base {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        .dna-base:hover {
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Virtual Zoology Laboratory</h1>
+        <div class="subtitle">Interactive Simulations | Designed & Developed by Yaswanth Kumar</div>
+    </header>
+
+    <main class="container">
+        <div class="toolbar">
+            <a href="./index.html" class="btn btn-outline">&larr; Back to Dashboard</a>
+            <button class="btn" style="background:var(--accent)" onclick="resetLabs()">↻ Reset Progress</button>
+        </div>
+
+        <!-- 1. Mitosis Simulator -->
+        <div class="lab-module" id="lab-mitosis">
+            <h2>1. Mitosis Stage Recognition</h2>
+            <div class="badge" id="badge-mitosis">✓ Completed</div>
+            <p>Identify the sequential stages of Mitosis by clicking the blank cells in order (Prophase &rarr; Metaphase
+                &rarr; Anaphase &rarr; Telophase).</p>
+
+            <div class="simulation-area">
+                <div class="mitosis-grid" id="mitosisGrid">
+                    <div class="cell-img" onclick="identifyMitosis(this, 'Prophase')"></div>
+                    <div class="cell-img" onclick="identifyMitosis(this, 'Metaphase')"></div>
+                    <div class="cell-img" onclick="identifyMitosis(this, 'Anaphase')"></div>
+                    <div class="cell-img" onclick="identifyMitosis(this, 'Telophase')"></div>
+                </div>
+                <div id="mitosisFeedback"
+                    style="color:var(--secondary); font-weight:bold; height: 1.5rem; margin-top: 1rem;">Click the
+                    Prophase cell!</div>
+            </div>
+        </div>
+
+        <!-- 2. Gram Staining -->
+        <div class="lab-module" id="lab-gram">
+            <h2>2. Gram Staining Technique</h2>
+            <div class="badge" id="badge-gram">✓ Completed</div>
+            <p>Perform the Gram stain procedure on the bacterial slide in the correct order.</p>
+
+            <div class="simulation-area">
+                <div class="bacteria-slide" id="slide">
+                    <div class="bacteria-cell" style="background-color: transparent;"></div>
+                    <div class="bacteria-cell" style="background-color: transparent; border-radius:50%; width:20px;">
+                    </div>
+                </div>
+                <div>
+                    <button class="step-btn" onclick="applyStain('crystalViolet')">1. Crystal Violet</button>
+                    <button class="step-btn" onclick="applyStain('iodine')">2. Gram's Iodine</button>
+                    <button class="step-btn" onclick="applyStain('alcohol')">3. Alcohol Wash</button>
+                    <button class="step-btn" onclick="applyStain('safranin')">4. Safranin</button>
+                </div>
+                <div id="stainFeedback" style="margin-top:1rem; font-style:italic;">Slide is empty. Add Crystal Violet
+                    first.</div>
+            </div>
+        </div>
+
+        <!-- 3. Heart Blood Flow -->
+        <div class="lab-module" id="lab-heart">
+            <h2>3. Heart Blood Flow Interaction</h2>
+            <div class="badge" id="badge-heart">✓ Completed</div>
+            <p>Trace the flow of deoxygenated blood entering the heart by clicking the chambers in order.</p>
+
+            <div class="simulation-area">
+                <div class="heart-diagram">
+                    <div class="chamber" onclick="traceHeart(this, 'RA', 1)">Right Atrium</div>
+                    <div class="chamber" onclick="traceHeart(this, 'LA', 3)">Left Atrium</div>
+                    <div class="chamber" onclick="traceHeart(this, 'RV', 2)">Right Ventricle</div>
+                    <div class="chamber" onclick="traceHeart(this, 'LV', 4)">Left Ventricle</div>
+                </div>
+                <div id="heartFeedback" style="margin-top:1.5rem; font-weight:bold;">Start with the chamber that
+                    receives blood from Vena Cava.</div>
+            </div>
+        </div>
+
+        <!-- 4. DNA Replication -->
+        <div class="lab-module" id="lab-dna">
+            <h2>4. DNA Replication Pairing</h2>
+            <div class="badge" id="badge-dna">✓ Completed</div>
+            <p>Complete the complementary DNA strand by selecting the correct base pairs (A-T, C-G).</p>
+
+            <div class="simulation-area">
+                <div class="dna-strand" id="templateStrand">
+                    <span>A</span><span>T</span><span>G</span><span>C</span><span>A</span>
+                </div>
+                <!-- V line mimicking hydrogen bonds -->
+                <div
+                    style="width:100%; height:20px; display:flex; justify-content:space-around; font-weight:bold; color:var(--text); opacity:0.3;">
+                    <span>|</span><span>|</span><span>|</span><span>|</span><span>|</span>
+                </div>
+                <div class="dna-strand" id="newStrand">
+                    <span class="dna-base" onclick="bindDNA(this, 'A', 'T')">_</span>
+                    <span class="dna-base" onclick="bindDNA(this, 'T', 'A')">_</span>
+                    <span class="dna-base" onclick="bindDNA(this, 'G', 'C')">_</span>
+                    <span class="dna-base" onclick="bindDNA(this, 'C', 'G')">_</span>
+                    <span class="dna-base" onclick="bindDNA(this, 'A', 'T')">_</span>
+                </div>
+                <div id="dnaFeedback" style="margin-top:1.5rem;">Click a blank space to fill the complementary base.
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Yaswanth Kumar | Zoology Academic Portal | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // --- Theme Management ---
+        const applyTheme = (theme) => document.documentElement.setAttribute('data-theme', theme);
+        const toggleTheme = () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const target = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('zoology_theme', target); applyTheme(target);
+            document.getElementById('theme-icon').textContent = target === 'dark' ? '☀️' : '🌙';
+        };
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('zoology_theme') || 'light';
+            applyTheme(saved);
+
+            if (window.location.protocol === 'file:' && (window.location.href.includes('/temp/') || window.location.href.includes('/AppData/Local/Temp/') || window.location.href.includes('content://'))) {
+                const warn = document.createElement('div');
+                warn.style = "background:#f59e0b; color:#000; padding:1rem; text-align:center; font-weight:bold; position:fixed; top:0; left:0; right:0; z-index:9999;";
+                warn.textContent = "⚠️ ZIP NOT EXTRACTED: Navigation may fail. Please extract the ZIP folder before use.";
+                document.body.prepend(warn);
+            }
+
+            const btn = document.createElement('button');
+            btn.className = 'theme-toggle'; btn.onclick = toggleTheme;
+            btn.innerHTML = `<span id="theme-icon">${saved === 'dark' ? '☀️' : '🌙'}</span>`;
+            document.body.appendChild(btn);
+
+            loadLabStatus();
+        });
+
+        // --- Lab Data Management ---
+        let labs = JSON.parse(localStorage.getItem('zoology_labs') || '{"mitosis": false, "gram": false, "heart": false, "dna": false}');
+        function loadLabStatus() {
+            if (labs.mitosis) document.getElementById('badge-mitosis').style.display = 'block';
+            if (labs.gram) document.getElementById('badge-gram').style.display = 'block';
+            if (labs.heart) document.getElementById('badge-heart').style.display = 'block';
+            if (labs.dna) document.getElementById('badge-dna').style.display = 'block';
+        }
+        function completeLab(name) {
+            labs[name] = true;
+            localStorage.setItem('zoology_labs', JSON.stringify(labs));
+            document.getElementById(`badge-${name}`).style.display = 'block';
+        }
+        function resetLabs() {
+            if (confirm('Reset all virtual lab progress?')) {
+                labs = { "mitosis": false, "gram": false, "heart": false, "dna": false };
+                localStorage.setItem('zoology_labs', JSON.stringify(labs));
+                location.reload();
+            }
+        }
+
+        // --- 1. Mitosis Simulator ---
+        let mitosisStage = 0;
+        const stages = ['Prophase', 'Metaphase', 'Anaphase', 'Telophase'];
+        function identifyMitosis(element, expected) {
+            if (labs.mitosis) return;
+            if (element.classList.contains('identified')) return;
+
+            if (expected === stages[mitosisStage]) {
+                element.classList.add('identified');
+                mitosisStage++;
+                if (mitosisStage < 4) {
+                    document.getElementById('mitosisFeedback').textContent = `Correct! Now click the ${stages[mitosisStage]} cell.`;
+                } else {
+                    document.getElementById('mitosisFeedback').textContent = "Excellent! You've successfully sequenced Mitosis.";
+                    completeLab('mitosis');
+                }
+            } else {
+                document.getElementById('mitosisFeedback').textContent = `Incorrect. Look for ${stages[mitosisStage]}.`;
+            }
+        }
+
+        // --- 2. Gram Staining ---
+        let gramStep = 0;
+        function applyStain(chemical) {
+            if (labs.gram) return;
+            const cells = document.querySelectorAll('.bacteria-cell');
+            const fb = document.getElementById('stainFeedback');
+
+            if (chemical === 'crystalViolet' && gramStep === 0) {
+                cells[0].style.backgroundColor = "purple"; cells[0].style.borderColor = "purple";
+                cells[1].style.backgroundColor = "purple"; cells[1].style.borderColor = "purple";
+                gramStep = 1; fb.textContent = "Crystal violet applied. Both are purple. Now add Iodine.";
+            }
+            else if (chemical === 'iodine' && gramStep === 1) {
+                gramStep = 2; fb.textContent = "Iodine added (mordant). CV-I complex formed. Now alcohol wash.";
+            }
+            else if (chemical === 'alcohol' && gramStep === 2) {
+                cells[0].style.backgroundColor = "transparent"; // Gram negative loses color
+                gramStep = 3; fb.textContent = "Alcohol decolorized the Gram-negative cell. Now apply counterstain.";
+            }
+            else if (chemical === 'safranin' && gramStep === 3) {
+                cells[0].style.backgroundColor = "pink"; cells[0].style.borderColor = "pink";
+                gramStep = 4; fb.textContent = "Lab Complete! Gram (+) is purple, Gram (-) is pink.";
+                completeLab('gram');
+            } else {
+                fb.textContent = "Wrong sequence or already applied! Resetting slide.";
+                cells.forEach(c => { c.style.backgroundColor = "transparent"; c.style.borderColor = "#999"; });
+                gramStep = 0;
+            }
+        }
+
+        // --- 3. Heart Blood Flow ---
+        let heartStep = 1;
+        function traceHeart(element, chamber, order) {
+            if (labs.heart) return;
+            const fb = document.getElementById('heartFeedback');
+
+            if (order === heartStep) {
+                element.style.backgroundColor = heartStep <= 2 ? "#3b82f6" : "#ef4444"; // Blue then Red
+                element.style.color = "white";
+                heartStep++;
+
+                if (heartStep === 2) fb.textContent = "Correct! Right Atrium to... ?";
+                else if (heartStep === 3) fb.textContent = "Correct! Now blood goes to Lungs, then returns to... ?";
+                else if (heartStep === 4) fb.textContent = "Correct! Left Atrium to... ?";
+                else if (heartStep === 5) {
+                    fb.textContent = "Lab Complete! Deoxygenated to Lungs, Oxygenated to Body.";
+                    completeLab('heart');
+                }
+            } else {
+                fb.textContent = "Incorrect sequence! Blood doesn't flow there next.";
+            }
+        }
+
+        // --- 4. DNA Replication ---
+        let dnaCount = 0;
+        function bindDNA(element, template, target) {
+            if (labs.dna) return;
+            if (element.textContent !== '_') return;
+
+            const guess = prompt(`Complement for ${template}: (Type A, T, G, or C)`).toUpperCase();
+            if (guess === target) {
+                element.textContent = guess;
+                element.style.color = "var(--accent)";
+                dnaCount++;
+                document.getElementById('dnaFeedback').textContent = "Correct pairing!";
+                if (dnaCount === 5) {
+                    document.getElementById('dnaFeedback').textContent = "Lab Complete! DNA strand successfully replicated.";
+                    completeLab('dna');
+                }
+            } else {
+                document.getElementById('dnaFeedback').textContent = `Incorrect pair for ${template}. Try again.`;
+            }
+        }
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js');
+            }
+        });
+    </script>
+</body>
+
+</html>
